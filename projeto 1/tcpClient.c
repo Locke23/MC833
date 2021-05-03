@@ -149,6 +149,35 @@ void handlePeopleWithGraduationYear (int clientSocket) {
 	send(clientSocket, buffer, strlen(buffer), 0);
 }
 
+void handleListAllPeople (int clientSocket){
+	char* buffer = "6";
+	send(clientSocket, buffer, strlen(buffer), 0);
+}
+
+void handleGetUser(int clientSocket) {
+	char email[20];
+	printf("Digite o email para a busca\n");
+	scanf("%s", email);
+
+	char* buffer = "7";
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,email);
+
+	send(clientSocket, buffer, strlen(buffer), 0);
+}
+
+void handleDeleteUser(int clientSocket) {
+	char email[20];
+	printf("Digite o email para a busca\n");
+	scanf("%s", email);
+
+	char* buffer = "8";
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,email);
+
+	send(clientSocket, buffer, strlen(buffer), 0);
+}
+
 int main(){
 
 	int clientSocket, ret;
@@ -198,6 +227,18 @@ int main(){
 
 			case '5':
 				handlePeopleWithGraduationYear(clientSocket);
+				break;
+			
+			case '6':
+				handleListAllPeople(clientSocket);
+				break;
+
+			case '7':
+				handleGetUser(clientSocket);
+				break;
+
+			case '8':
+				handleDeleteUser(clientSocket);
 				break;
 
 			default:
