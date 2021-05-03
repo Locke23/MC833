@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 8306
+#define PORT 8313
 #define MAXCHAR 1000
 void strreplace(char *string, const char *find, const char *replaceWith){
     if(strstr(string, replaceWith) != NULL){
@@ -41,45 +41,12 @@ void personInformation(char* buffer, int newSocket) {
 	send(newSocket, buffer, strlen(buffer), 0);
 }
 
-// strcpy(filename2, "data/");
-// strreplace(str, "\n", "");
-// strcat(filename2, str);
-// strcat(filename2, ".txt");
-// strcpy(profileGetted2, "");
-// printf("---- %s\n", filename2);
-
-// fp2 = fopen(filename2, "r");
-// if (fp2 == NULL){
-// 	printf("Could not open file %s",filename2);
-// }
-// while (fgets(str, MAXCHAR, fp2) != NULL)
-// 	strcat(profileGetted2, str);
-// fclose(fp2);
-// printf("%s",oneProfile());
-
-// const char* oneProfile() {
-// 	FILE *fp2;
-// 	char str2[MAXCHAR];
-// 	static char profileGetted2[200] = "";
-
-// 	fp2 = fopen("data/gigantelli@unicamp.br.txt", "r");
-// 	if (fp2 == NULL){
-// 		printf("Could not open file");
-// 	}
-// 	while (fgets(str2, MAXCHAR, fp2) != NULL)
-// 		printf("- %s",str2);
-// 		strcat(profileGetted2, str2);
-// 	fclose(fp2);
-
-// 	return profileGetted2;
-// }
-
 void listAll(char* buffer, int newSocket) {
 	FILE *fp;
     char str[MAXCHAR];
     char filename[1000] = "data/index.txt";
     char emails[2000] = "";
-	char profilesGetted[2000] = "123";
+	char profilesGetted[50000] = "";
 
     fp = fopen(filename, "r");
     if (fp == NULL){
@@ -98,19 +65,24 @@ void listAll(char* buffer, int newSocket) {
 		char profileURL[1000] = "data/";
 		strcat(profileURL, ptr);
 		strcat(profileURL, ".txt");
-		// printf("%s\n", profileURL);
 		fp = fopen(profileURL, "r");
 		if (fp == NULL){
 			printf("Could not open file");
 		}
 		while (fgets(str, MAXCHAR, fp) != NULL)
-			printf("- %s",str);
+			// printf("- %s",str);
+			strcat(profilesGetted, str);
+			// profilesGetted
 		fclose(fp);
 
 		ptr = strtok(NULL, "\n");
 	}
 
-	strcpy(buffer, emails);
+	printf("-------------------------------");
+	printf("%s", profilesGetted);
+	printf("-------------------------------");
+
+	strcpy(buffer, profilesGetted);
 	send(newSocket, buffer, strlen(buffer), 0);
 }
 
