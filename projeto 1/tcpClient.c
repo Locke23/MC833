@@ -62,7 +62,7 @@ void handleCreateNewProfile (int clientSocket) {
   scanf("%d",&temp); // temp statement to clear buffer
 	habilidades = inputString(stdin, 20);
 
-	char* buffer = "inicial";
+	char* buffer = "1";
 	asprintf(&buffer,"%s&",buffer);
 	asprintf(&buffer,"%s%s",buffer,nome);
 
@@ -82,6 +82,28 @@ void handleCreateNewProfile (int clientSocket) {
 	asprintf(&buffer,"%s%s",buffer,habilidades);
 
 	send(clientSocket, buffer, strlen(buffer), 0);
+}
+
+void handleAddExperience (int clientSocket) {
+	char email[20];
+	printf("Digite o email\n");
+	scanf("%s", email);
+
+	char* experience;
+	int temp;
+	printf("Digite a experiencia\n");
+  scanf("%d",&temp); // temp statement to clear buffer
+	experience = inputString(stdin, 20);
+	
+	char* buffer = "2";
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,email);
+
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s\n",buffer,experience);
+
+	send(clientSocket, buffer, strlen(buffer), 0);
+
 }
 
 int main(){
@@ -118,7 +140,11 @@ int main(){
 			case '1':
 				handleCreateNewProfile(clientSocket);
 				break;
-			
+
+			case '2':
+				handleAddExperience(clientSocket);
+				break;
+
 			default:
 				break;
 		}
