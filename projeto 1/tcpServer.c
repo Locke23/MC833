@@ -7,35 +7,128 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 4444
+#define PORT 8306
 #define MAXCHAR 1000
+void strreplace(char *string, const char *find, const char *replaceWith){
+    if(strstr(string, replaceWith) != NULL){
+        char *temporaryString = malloc(strlen(strstr(string, find) + strlen(find)) + 1);
+        strcpy(temporaryString, strstr(string, find) + strlen(find));    //Create a string with what's after the replaced part
+        *strstr(string, find) = '\0';    //Take away the part to replace and the part after it in the initial string
+        strcat(string, replaceWith);    //Concat the first part of the string with the part to replace with
+        strcat(string, temporaryString);    //Concat the first part of the string with the part after the replaced part
+        free(temporaryString);    //Free the memory to avoid memory leaks
+    }
+}
 
 void personInformation(char* buffer, int newSocket) {
 	FILE *fp;
     char str[MAXCHAR];
-    char filename[2000] = "data/";
-    char example[2000] = "";
-	char temp[2000] = "";
+    char filename[1000] = "data/";
+    char profileGetted[2000] = "";
 	buffer += 1;
-	strcpy(temp, buffer);
-	strcat(temp, ".txt");
-	strcat(filename, temp);
+	strcat(filename, buffer);
+	strcat(filename, ".txt");
     fp = fopen(filename, "r");
 
-	printf("caralho\n");
-	printf("%s\n", filename);
-	printf("%s\n", buffer);
-	printf("%s\n", temp);
     if (fp == NULL){
         printf("Could not open file %s",filename);
     }
     while (fgets(str, MAXCHAR, fp) != NULL)
-        strcat(example, str);
+        strcat(profileGetted, str);
     fclose(fp);
 
-	strcpy(buffer, example);
+	strcpy(buffer, profileGetted);
 	send(newSocket, buffer, strlen(buffer), 0);
 }
+
+// strcpy(filename2, "data/");
+// strreplace(str, "\n", "");
+// strcat(filename2, str);
+// strcat(filename2, ".txt");
+// strcpy(profileGetted2, "");
+// printf("---- %s\n", filename2);
+
+// fp2 = fopen(filename2, "r");
+// if (fp2 == NULL){
+// 	printf("Could not open file %s",filename2);
+// }
+// while (fgets(str, MAXCHAR, fp2) != NULL)
+// 	strcat(profileGetted2, str);
+// fclose(fp2);
+// printf("%s",oneProfile());
+
+// const char* oneProfile() {
+// 	FILE *fp2;
+// 	char str2[MAXCHAR];
+// 	static char profileGetted2[200] = "";
+
+// 	fp2 = fopen("data/gigantelli@unicamp.br.txt", "r");
+// 	if (fp2 == NULL){
+// 		printf("Could not open file");
+// 	}
+// 	while (fgets(str2, MAXCHAR, fp2) != NULL)
+// 		printf("- %s",str2);
+// 		strcat(profileGetted2, str2);
+// 	fclose(fp2);
+
+// 	return profileGetted2;
+// }
+
+void listAll(char* buffer, int newSocket) {
+	FILE *fp;
+    char str[MAXCHAR];
+    char filename[1000] = "data/index.txt";
+    char emails[2000] = "";
+	char profilesGetted[2000] = "123";
+
+    fp = fopen(filename, "r");
+    if (fp == NULL){
+        printf("Could not open file %s",filename);
+    }
+    while (fgets(str, MAXCHAR, fp) != NULL) {
+        strcat(emails, str);
+	}
+    fclose(fp);
+
+	char *ptr = strtok(emails, "\n");
+	while (ptr != NULL)
+	{
+		printf("%s\n", ptr);
+		
+		char profileURL[1000] = "data/";
+		strcat(profileURL, ptr);
+		strcat(profileURL, ".txt");
+		// printf("%s\n", profileURL);
+		fp = fopen(profileURL, "r");
+		if (fp == NULL){
+			printf("Could not open file");
+		}
+		while (fgets(str, MAXCHAR, fp) != NULL)
+			printf("- %s",str);
+		fclose(fp);
+
+		ptr = strtok(NULL, "\n");
+	}
+
+	strcpy(buffer, emails);
+	send(newSocket, buffer, strlen(buffer), 0);
+}
+
+void helpMessage(char* buffer, int newSocket) {
+	char helpMessage[2000] = "";
+	strcat(helpMessage,"1 - cadastrar um novo perfil utilizando o email como identificador\n");
+	strcat(helpMessage, "2 - acrescentar uma nova experiência profissional em um perfil\n");
+	strcat(helpMessage, "3 - listar todas as pessoas (email e nome) formadas em um determinado curso\n");
+	strcat(helpMessage, "4 - listar todas as pessoas (email e nome) que possuam uma determinada habilidade\n");
+	strcat(helpMessage, "5 - listar todas as pessoas (email, nome e curso) formadas em um determinado ano\n");
+	strcat(helpMessage, "6 - listar todas as informações de todos os perfis\n");
+	strcat(helpMessage, "7 - dado o email de um perfil, retornar suas informações\n");
+	strcat(helpMessage, "8 - remover um perfil a partir de seu identificador (email)\n");
+	strcpy(buffer, helpMessage);
+	send(newSocket, buffer, strlen(buffer), 0);
+}
+
+
 
 int main(){
 
@@ -121,8 +214,9 @@ int main(){
 							break;
 
 						case '6':
-							strcpy(buffer, "listAll");
-							send(newSocket, buffer, strlen(buffer), 0);
+							// strcpy(buffer, "listAll");
+							listAll(buffer, newSocket);
+							// send(newSocket, buffer, strlen(buffer), 0);
 							break;
 
 						case '7':
@@ -135,8 +229,7 @@ int main(){
 							break;
 
 						default:
-							strcpy(buffer, "1 - cadastrar um novo perfil utilizando o email como identificador\n2 - acrescentar uma nova experiência profissional em um perfil\n3 - listar todas as pessoas (email e nome) formadas em um determinado curso\n4 - listar todas as pessoas (email e nome) que possuam uma determinada habilidade\n5 - listar todas as pessoas (email, nome e curso) formadas em um determinado ano\n6 - listar todas as informações de todos os perfis\n7 - dado o email de um perfil, retornar suas informações\n8 - remover um perfil a partir de seu identificador (email)\n");
-							send(newSocket, buffer, strlen(buffer), 0);
+							helpMessage(buffer, newSocket);
 							break;
 					}
 					bzero(buffer, sizeof(buffer));
