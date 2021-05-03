@@ -106,6 +106,21 @@ void handleAddExperience (int clientSocket) {
 
 }
 
+void handlePeopleWithCourse (int clientSocket) {
+	char* formacaoAcad;
+	int temp;
+	printf("Digite o formação acadêmica para a busca\n");
+  scanf("%d",&temp);
+	formacaoAcad = inputString(stdin, 20);
+
+	char* buffer = "3";
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,formacaoAcad);
+
+	send(clientSocket, buffer, strlen(buffer), 0);
+	
+}
+
 int main(){
 
 	int clientSocket, ret;
@@ -143,6 +158,10 @@ int main(){
 
 			case '2':
 				handleAddExperience(clientSocket);
+				break;
+
+			case '3':
+				handlePeopleWithCourse(clientSocket);
 				break;
 
 			default:
