@@ -7,17 +7,42 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 8313
+#define PORT 8338
 #define MAXCHAR 1000
-void strreplace(char *string, const char *find, const char *replaceWith){
-    if(strstr(string, replaceWith) != NULL){
-        char *temporaryString = malloc(strlen(strstr(string, find) + strlen(find)) + 1);
-        strcpy(temporaryString, strstr(string, find) + strlen(find));    //Create a string with what's after the replaced part
-        *strstr(string, find) = '\0';    //Take away the part to replace and the part after it in the initial string
-        strcat(string, replaceWith);    //Concat the first part of the string with the part to replace with
-        strcat(string, temporaryString);    //Concat the first part of the string with the part after the replaced part
-        free(temporaryString);    //Free the memory to avoid memory leaks
+
+void addExperience(char* buffer, int newSocket) {
+	FILE *fp;
+    char str[MAXCHAR];
+    char filename[1000] = "data/";
+    char profileGetted[2000] = "";
+	buffer += 1;
+	char *ptr = strtok(buffer, "&");
+
+	strcat(filename, ptr);
+	strcat(filename, ".txt");
+	printf("url: %s\n", filename);
+
+	ptr = strtok(NULL, "&");
+	char experience[1000];
+	strcpy(experience, ptr);
+	printf("toAdd: %s\n", experience);
+
+    fp = fopen(filename, "r+");
+
+    if (fp == NULL){
+        printf("Could not open file %s",filename);
     }
+	int aux = -4;
+	while (fgets(str, MAXCHAR, fp) != NULL) {
+		aux++;
+		strcat(profileGetted, str);
+	}
+
+	fprintf(fp, "\n(%d)%s", aux, experience);
+    fclose(fp);
+
+	strcpy(buffer, profileGetted);
+	send(newSocket, buffer, strlen(buffer), 0);
 }
 
 void personInformation(char* buffer, int newSocket) {
@@ -70,17 +95,11 @@ void listAll(char* buffer, int newSocket) {
 			printf("Could not open file");
 		}
 		while (fgets(str, MAXCHAR, fp) != NULL)
-			// printf("- %s",str);
 			strcat(profilesGetted, str);
-			// profilesGetted
 		fclose(fp);
 
 		ptr = strtok(NULL, "\n");
 	}
-
-	printf("-------------------------------");
-	printf("%s", profilesGetted);
-	printf("-------------------------------");
 
 	strcpy(buffer, profilesGetted);
 	send(newSocket, buffer, strlen(buffer), 0);
@@ -99,8 +118,6 @@ void helpMessage(char* buffer, int newSocket) {
 	strcpy(buffer, helpMessage);
 	send(newSocket, buffer, strlen(buffer), 0);
 }
-
-
 
 int main(){
 
@@ -166,8 +183,7 @@ int main(){
 							break;
 
 						case '2':
-							strcpy(buffer, "addExperience");
-							send(newSocket, buffer, strlen(buffer), 0);
+							addExperience(buffer, newSocket);
 							break;
 
 						case '3':
@@ -186,9 +202,7 @@ int main(){
 							break;
 
 						case '6':
-							// strcpy(buffer, "listAll");
 							listAll(buffer, newSocket);
-							// send(newSocket, buffer, strlen(buffer), 0);
 							break;
 
 						case '7':

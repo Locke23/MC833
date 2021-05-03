@@ -1,7 +1,5 @@
-João
-Santos
-Campinas
-Engenharia de Computação
+This is a string which is written to a file
+�ão
 Criptografia, Servidores
 (1)Add some experience
 (2)add exp for time testing
@@ -11,3 +9,6 @@ Criptografia, Servidores
 (6)add exp for timming tests
 (7)add exp for timming tests
 (8)add exp for timming tests
+This is a string which is written to a file
+This is a string which is written to a file
+teste123

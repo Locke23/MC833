@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 8313
+#define PORT 8338
 
 int main(){
 
@@ -58,28 +58,28 @@ int main(){
 // documentation
 
 // createNewProfile
-// 1 + "-" + email
+// 1 + email
 
 // addExperience
-// 2 + "-" + email
+// 2 + email + "&&" + Experience
 
 // peopleWithCourse
-// 3 + "-" + course
+// 3 + course
 
 // peopleWitHabiliity
-// 4 + "-" + hability
+// 4 + hability
 
 // peopleWithConclusionYear
-// 5 + "-" + conclusionYear
+// 5 + conclusionYear
 
 // listAll
 // 6
 
 // personInformation
-// 7 + "-" + email
+// 7 + email
 
 // removePerson
-// 8 + "-" + email
+// 8 + email
 
 // help
 // other texts
