@@ -9,6 +9,81 @@
 
 #define PORT 8338
 
+char *inputString(FILE* fp, size_t size){
+//The size is extended by the input with the value of the provisional
+    char *str;
+    int ch;
+    size_t len = 0;
+    str = realloc(NULL, sizeof(*str)*size);//size is start size
+    if(!str)return str;
+    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
+        str[len++]=ch;
+        if(len==size){
+            str = realloc(str, sizeof(*str)*(size+=16));
+            if(!str)return str;
+        }
+    }
+    str[len++]='\0';
+
+    return realloc(str, sizeof(*str)*len);
+}
+
+void handleCreateNewProfile (int clientSocket) {
+	char email[20];
+	printf("Digite o email\n");
+	scanf("%s", email);
+
+	char nome[20];
+	printf("Digite o nome\n");
+	scanf("%s", nome);
+
+	char* sobrenome;
+	int temp;
+	printf("Digite o sobrenome\n");
+  scanf("%d",&temp); // temp statement to clear buffer
+	sobrenome = inputString(stdin, 20);
+
+	char* residencia;
+	printf("Digite a cidade\n");
+  scanf("%d",&temp); // temp statement to clear buffer
+	residencia = inputString(stdin, 20);
+
+	char* formacaoAcad;
+	printf("Digite o formação acadêmica\n");
+	formacaoAcad = inputString(stdin, 20);
+
+	char* anoFormatura;
+	printf("Digite o ano de formatura\n");
+	anoFormatura = inputString(stdin, 20);
+	
+	char* habilidades;
+	printf("Digite suas habilidades no seguinte formato:\n");
+	printf("Análise de Dados, Internet das Coisas, Computação em Nuvem\n");
+  scanf("%d",&temp); // temp statement to clear buffer
+	habilidades = inputString(stdin, 20);
+
+	char* buffer = "inicial";
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,nome);
+
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,sobrenome);
+
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,residencia);
+
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,formacaoAcad);
+	
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,anoFormatura);
+
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,habilidades);
+
+	send(clientSocket, buffer, strlen(buffer), 0);
+}
+
 int main(){
 
 	int clientSocket, ret;
@@ -37,8 +112,17 @@ int main(){
 	while(1){
 		printf("Client: \t");
 		scanf("%s", &buffer[0]);
-		send(clientSocket, buffer, strlen(buffer), 0);
-
+		// send(clientSocket, buffer, strlen(buffer), 0);
+		
+		switch (strtok(buffer, " ")[0]) {
+			case '1':
+				handleCreateNewProfile(clientSocket);
+				break;
+			
+			default:
+				break;
+		}
+		
 		if(strcmp(buffer, ":exit") == 0){
 			close(clientSocket);
 			printf("[-]Disconnected from server.\n");
@@ -55,13 +139,15 @@ int main(){
 	return 0;
 }
 
+
+
 // documentation
 
 // createNewProfile
-// 1 + email
+// 1&email&nome&...
 
 // addExperience
-// 2 + email + "&&" + Experience
+// 2&email&Experience
 
 // peopleWithCourse
 // 3 + course
