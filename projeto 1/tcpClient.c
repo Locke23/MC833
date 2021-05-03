@@ -121,6 +121,20 @@ void handlePeopleWithCourse (int clientSocket) {
 	
 }
 
+void handlePeopleWitHabiliity (int clientSocket) {
+	char* habilidade;
+	int temp;
+	printf("Digite a habilidade para a busca\n");
+  scanf("%d",&temp);
+	habilidade = inputString(stdin, 20);
+
+	char* buffer = "4";
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,habilidade);
+
+	send(clientSocket, buffer, strlen(buffer), 0);
+}
+
 int main(){
 
 	int clientSocket, ret;
@@ -162,6 +176,10 @@ int main(){
 
 			case '3':
 				handlePeopleWithCourse(clientSocket);
+				break;
+
+			case '4':
+				handlePeopleWitHabiliity(clientSocket);
 				break;
 
 			default:
