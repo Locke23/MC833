@@ -7,12 +7,40 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 4100
+#define PORT 4444
+#define MAXCHAR 1000
+
+void personInformation(char* buffer, int newSocket) {
+	FILE *fp;
+    char str[MAXCHAR];
+    char filename[2000] = "data/";
+    char example[2000] = "";
+	char temp[2000] = "";
+	buffer += 1;
+	strcpy(temp, buffer);
+	strcat(temp, ".txt");
+	strcat(filename, temp);
+    fp = fopen(filename, "r");
+
+	printf("caralho\n");
+	printf("%s\n", filename);
+	printf("%s\n", buffer);
+	printf("%s\n", temp);
+    if (fp == NULL){
+        printf("Could not open file %s",filename);
+    }
+    while (fgets(str, MAXCHAR, fp) != NULL)
+        strcat(example, str);
+    fclose(fp);
+
+	strcpy(buffer, example);
+	send(newSocket, buffer, strlen(buffer), 0);
+}
 
 int main(){
 
 	int sockfd, ret;
-	 struct sockaddr_in serverAddr;
+	struct sockaddr_in serverAddr;
 
 	int newSocket;
 	struct sockaddr_in newAddr;
@@ -65,46 +93,52 @@ int main(){
 					break;
 				}else{
 					printf("Client: %s\n", buffer);
-
+					// printUsers();
 					 switch (strtok(buffer, " ")[0]) {
 						case '1':
 							strcpy(buffer, "createNewProfile");
+							send(newSocket, buffer, strlen(buffer), 0);
 							break;
 
 						case '2':
 							strcpy(buffer, "addExperience");
+							send(newSocket, buffer, strlen(buffer), 0);
 							break;
 
 						case '3':
 							strcpy(buffer, "peopleWithCourse");
+							send(newSocket, buffer, strlen(buffer), 0);
 							break;
 
 						case '4':
 							strcpy(buffer, "peopleWitHabiliity");
+							send(newSocket, buffer, strlen(buffer), 0);
 							break;
 
 						case '5':
 							strcpy(buffer, "peopleWithConclusionYear");
+							send(newSocket, buffer, strlen(buffer), 0);
 							break;
 
 						case '6':
 							strcpy(buffer, "listAll");
+							send(newSocket, buffer, strlen(buffer), 0);
 							break;
 
 						case '7':
-							strcpy(buffer, "personInformation");
+							personInformation(buffer, newSocket);
 							break;
 
 						case '8':
 							strcpy(buffer, "removePerson");
+							send(newSocket, buffer, strlen(buffer), 0);
 							break;
 
 						default:
 							strcpy(buffer, "1 - cadastrar um novo perfil utilizando o email como identificador\n2 - acrescentar uma nova experiência profissional em um perfil\n3 - listar todas as pessoas (email e nome) formadas em um determinado curso\n4 - listar todas as pessoas (email e nome) que possuam uma determinada habilidade\n5 - listar todas as pessoas (email, nome e curso) formadas em um determinado ano\n6 - listar todas as informações de todos os perfis\n7 - dado o email de um perfil, retornar suas informações\n8 - remover um perfil a partir de seu identificador (email)\n");
+							send(newSocket, buffer, strlen(buffer), 0);
 							break;
 					}
-
-					send(newSocket, buffer, strlen(buffer), 0);
 					bzero(buffer, sizeof(buffer));
 				}
 			}

@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 4100
+#define PORT 4444
 
 int main(){
 
@@ -48,9 +48,38 @@ int main(){
 		if(recv(clientSocket, buffer, 1024, 0) < 0){
 			printf("[-]Error in receiving data.\n");
 		}else{
-			printf("Server: \t%s\n", buffer);
+			printf("Server: \n%s\n", buffer);
 		}
 	}
 
 	return 0;
 }
+
+// documentation
+
+// createNewProfile
+// 1 + "-" + email
+
+// addExperience
+// 2 + "-" + email
+
+// peopleWithCourse
+// 3 + "-" + course
+
+// peopleWitHabiliity
+// 4 + "-" + hability
+
+// peopleWithConclusionYear
+// 5 + "-" + conclusionYear
+
+// listAll
+// 6
+
+// personInformation
+// 7 + "-" + email
+
+// removePerson
+// 8 + "-" + email
+
+// help
+// other texts
