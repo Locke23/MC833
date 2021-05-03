@@ -121,7 +121,7 @@ void handlePeopleWithCourse (int clientSocket) {
 	
 }
 
-void handlePeopleWitHabiliity (int clientSocket) {
+void handlePeopleWithHabiliity (int clientSocket) {
 	char* habilidade;
 	int temp;
 	printf("Digite a habilidade para a busca\n");
@@ -131,6 +131,20 @@ void handlePeopleWitHabiliity (int clientSocket) {
 	char* buffer = "4";
 	asprintf(&buffer,"%s&",buffer);
 	asprintf(&buffer,"%s%s",buffer,habilidade);
+
+	send(clientSocket, buffer, strlen(buffer), 0);
+}
+
+void handlePeopleWithGraduationYear (int clientSocket) {
+	char* year;
+	int temp;
+	printf("Digite o ano de formatura para a busca\n");
+  scanf("%d",&temp);
+	year = inputString(stdin, 20);
+
+	char* buffer = "5";
+	asprintf(&buffer,"%s&",buffer);
+	asprintf(&buffer,"%s%s",buffer,year);
 
 	send(clientSocket, buffer, strlen(buffer), 0);
 }
@@ -179,7 +193,11 @@ int main(){
 				break;
 
 			case '4':
-				handlePeopleWitHabiliity(clientSocket);
+				handlePeopleWithHabiliity(clientSocket);
+				break;
+
+			case '5':
+				handlePeopleWithGraduationYear(clientSocket);
 				break;
 
 			default:
