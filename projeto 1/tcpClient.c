@@ -106,7 +106,7 @@ void handleAddExperience (int clientSocket) {
 
 }
 
-void handlePeopleWithCourse (int clientSocket) {
+void handleGetUserByCourse (int clientSocket) {
 	char* formacaoAcad;
 	int temp;
 	printf("Digite o formação acadêmica para a busca\n");
@@ -121,7 +121,7 @@ void handlePeopleWithCourse (int clientSocket) {
 	
 }
 
-void handlePeopleWithHabiliity (int clientSocket) {
+void handleGetUserByHabiliity (int clientSocket) {
 	char* habilidade;
 	int temp;
 	printf("Digite a habilidade para a busca\n");
@@ -135,7 +135,7 @@ void handlePeopleWithHabiliity (int clientSocket) {
 	send(clientSocket, buffer, strlen(buffer), 0);
 }
 
-void handlePeopleWithGraduationYear (int clientSocket) {
+void handleGetUserByGraduationYear (int clientSocket) {
 	char* year;
 	int temp;
 	printf("Digite o ano de formatura para a busca\n");
@@ -149,7 +149,7 @@ void handlePeopleWithGraduationYear (int clientSocket) {
 	send(clientSocket, buffer, strlen(buffer), 0);
 }
 
-void handleListAllPeople (int clientSocket){
+void handleListAllUsers (int clientSocket){
 	char* buffer = "6";
 	send(clientSocket, buffer, strlen(buffer), 0);
 }
@@ -218,19 +218,19 @@ int main(){
 				break;
 
 			case '3':
-				handlePeopleWithCourse(clientSocket);
+				handleGetUserByCourse(clientSocket);
 				break;
 
 			case '4':
-				handlePeopleWithHabiliity(clientSocket);
+				handleGetUserByHabiliity(clientSocket);
 				break;
 
 			case '5':
-				handlePeopleWithGraduationYear(clientSocket);
+				handleGetUserByGraduationYear(clientSocket);
 				break;
 			
 			case '6':
-				handleListAllPeople(clientSocket);
+				handleListAllUsers(clientSocket);
 				break;
 
 			case '7':
@@ -242,6 +242,7 @@ int main(){
 				break;
 
 			default:
+				send(clientSocket, "help", strlen(buffer), 0);
 				break;
 		}
 		
